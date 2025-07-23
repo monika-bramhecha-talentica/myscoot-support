@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { ArrowLeft, Send, Paperclip, Star } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { FileUpload } from '@/components/upload/FileUpload';
 
 interface ChatMessage {
   id: string;
@@ -281,9 +283,32 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId, onBack 
       <Card className="rounded-t-none border-t-0">
         <CardContent className="p-4">
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Paperclip className="h-4 w-4" />
-            </Button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Paperclip className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Upload Files</SheetTitle>
+                  <SheetDescription>
+                    Share documents or images with support
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="mt-6">
+                  <FileUpload 
+                    sessionId={sessionId}
+                    onFileUploaded={(filePath, fileName) => {
+                      toast({
+                        title: "File Uploaded",
+                        description: `${fileName} has been shared with support`,
+                      });
+                    }}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
             <Input
               placeholder="Type your message..."
               value={newMessage}

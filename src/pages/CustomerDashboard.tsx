@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { MessageSquare, Upload, Star, Clock, User } from 'lucide-react';
 import { ChatInterface } from '@/components/chat/ChatInterface';
+import { FileUpload } from '@/components/upload/FileUpload';
 
 interface PredefinedQuestion {
   id: string;
@@ -284,22 +285,14 @@ export const CustomerDashboard: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Upload className="h-5 w-5" />
-                  File Upload
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full">
-                  Upload Documents
-                </Button>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Upload files to get help with specific documents
-                </p>
-              </CardContent>
-            </Card>
+            <FileUpload 
+              onFileUploaded={(filePath, fileName) => {
+                toast({
+                  title: "File Ready",
+                  description: `${fileName} is ready to share in chat`,
+                });
+              }}
+            />
           </div>
         </div>
       </div>
