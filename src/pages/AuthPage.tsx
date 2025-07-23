@@ -66,6 +66,8 @@ export const AuthPage: React.FC = () => {
             loading={loading}
           />
         )}
+        {/* Hidden reCAPTCHA container for Firebase */}
+        <div id="recaptcha-container"></div>
       </div>
     </div>
   );
