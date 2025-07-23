@@ -1,12 +1,14 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, User, Shield, Phone } from 'lucide-react';
+import { LogOut, User, Shield, Phone, MessageSquare } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const { user, signOut, isAdmin, isCustomer } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     const { error } = await signOut();
@@ -94,13 +96,27 @@ const Index = () => {
             </div>
 
             <div className="pt-4">
-              <h3 className="font-semibold mb-2">Next Steps:</h3>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Chat interface implementation</li>
-                <li>• Order tracking system</li>
-                <li>• Support ticket management</li>
-                <li>• Admin dashboard (if admin role)</li>
-              </ul>
+              <h3 className="font-semibold mb-2">Available Features:</h3>
+              <div className="grid gap-3">
+                {isCustomer && (
+                  <Button 
+                    onClick={() => navigate('/support')}
+                    className="justify-start"
+                    variant="outline"
+                  >
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Customer Support Chat
+                  </Button>
+                )}
+                <div className="text-sm text-muted-foreground">
+                  <p>More features coming soon:</p>
+                  <ul className="space-y-1 mt-2">
+                    <li>• Order tracking system</li>
+                    <li>• Support ticket management</li>
+                    {isAdmin && <li>• Admin dashboard</li>}
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
