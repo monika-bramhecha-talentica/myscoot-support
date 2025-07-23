@@ -1,14 +1,5 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDxxx", // Replace with your Firebase config
-//   authDomain: "your-project.firebaseapp.com",
-//   projectId: "your-project-id",
-//   storageBucket: "your-project.appspot.com",
-//   messagingSenderId: "123456789",
-//   appId: "1:123456789:web:abcdef"
-// };
 
 const firebaseConfig = {
   apiKey: "AIzaSyD0LR2cS3ee562tPtC006KHYrev3BLV5EM",
@@ -20,8 +11,8 @@ const firebaseConfig = {
   measurementId: "G-8TQ4XL6VLF"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase - prevent duplicate app error
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
