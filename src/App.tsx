@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import AuthPage from "./pages/AuthPage";
 import NotFound from "./pages/NotFound";
 import { CustomerDashboard } from "./pages/CustomerDashboard";
+import { OrderPage } from "./pages/OrderPage";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,14 @@ const App = () => (
               element={
                 <ProtectedRoute requireCustomer>
                   <CustomerDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/orders" 
+              element={
+                <ProtectedRoute requireCustomer>
+                  <OrderPage />
                 </ProtectedRoute>
               } 
             />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, User, Shield, Phone, MessageSquare } from 'lucide-react';
+import { LogOut, User, Shield, Phone, MessageSquare, Package } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -99,19 +99,28 @@ const Index = () => {
               <h3 className="font-semibold mb-2">Available Features:</h3>
               <div className="grid gap-3">
                 {isCustomer && (
-                  <Button 
-                    onClick={() => navigate('/support')}
-                    className="justify-start"
-                    variant="outline"
-                  >
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Customer Support Chat
-                  </Button>
+                  <>
+                    <Button 
+                      onClick={() => navigate('/support')}
+                      className="justify-start"
+                      variant="outline"
+                    >
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      Customer Support Chat
+                    </Button>
+                    <Button 
+                      onClick={() => navigate('/orders')}
+                      className="justify-start"
+                      variant="outline"
+                    >
+                      <Package className="w-4 h-4 mr-2" />
+                      Track Orders & Deliveries
+                    </Button>
+                  </>
                 )}
                 <div className="text-sm text-muted-foreground">
                   <p>More features coming soon:</p>
                   <ul className="space-y-1 mt-2">
-                    <li>• Order tracking system</li>
                     <li>• Support ticket management</li>
                     {isAdmin && <li>• Admin dashboard</li>}
                   </ul>
