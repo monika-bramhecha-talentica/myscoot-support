@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
 
 interface AuthContextType {
   user: User | null;
@@ -31,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAdmin, setIsAdmin] = useState(false);
   const [isCustomer, setIsCustomer] = useState(false);
   
-  const { sendOTP: firebaseSendOTP, verifyOTP: firebaseVerifyOTP } = useFirebaseAuth();
+  
 
   const checkUserRole = async (userId: string) => {
     try {
@@ -110,11 +109,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signInWithOTP = async (phone: string) => {
-    return await firebaseSendOTP(phone);
+    console.log('Sending OTP to:', phone);
+    const { error } = await supabase.auth.signInWithOtp({
+      phone: phone,
+      options: {
+        shouldCreateUser: true
+      }
+    });
+    
+    if (error) {
+      console.error('Supabase OTP error:', error);
+    } else {
+      console.log('OTP sent successfully via Supabase');
+    }
+    
+    return { error };
   };
 
   const verifyOTP = async (phone: string, token: string) => {
-    return await firebaseVerifyOTP(token);
+    console.log('Verifying OTP for:', phone, 'token:', token);
+    const { error } = await supabase.auth.verifyOtp({
+      phone: phone,
+      token: token,
+      type: 'sms'
+    });
+    
+    if (error) {
+      console.error('Supabase OTP verification error:', error);
+    } else {
+      console.log('OTP verified successfully via Supabase');
+    }
+    
+    return { error };
   };
 
   const signOut = async () => {
