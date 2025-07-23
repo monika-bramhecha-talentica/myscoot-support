@@ -150,11 +150,15 @@ export type Database = {
       escalated_queries: {
         Row: {
           assigned_to: string | null
+          category: string | null
           created_at: string
           customer_id: string
           description: string
           id: string
+          improved_response: string | null
+          original_response: string | null
           priority: number | null
+          satisfaction_rating: number | null
           session_id: string | null
           status: Database["public"]["Enums"]["escalation_status"]
           subject: string
@@ -162,11 +166,15 @@ export type Database = {
         }
         Insert: {
           assigned_to?: string | null
+          category?: string | null
           created_at?: string
           customer_id: string
           description: string
           id?: string
+          improved_response?: string | null
+          original_response?: string | null
           priority?: number | null
+          satisfaction_rating?: number | null
           session_id?: string | null
           status?: Database["public"]["Enums"]["escalation_status"]
           subject: string
@@ -174,11 +182,15 @@ export type Database = {
         }
         Update: {
           assigned_to?: string | null
+          category?: string | null
           created_at?: string
           customer_id?: string
           description?: string
           id?: string
+          improved_response?: string | null
+          original_response?: string | null
           priority?: number | null
+          satisfaction_rating?: number | null
           session_id?: string | null
           status?: Database["public"]["Enums"]["escalation_status"]
           subject?: string
@@ -210,6 +222,7 @@ export type Database = {
           id: string
           is_active: boolean
           question: string
+          tags: string[] | null
           updated_at: string
         }
         Insert: {
@@ -220,6 +233,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           question: string
+          tags?: string[] | null
           updated_at?: string
         }
         Update: {
@@ -230,7 +244,38 @@ export type Database = {
           id?: string
           is_active?: boolean
           question?: string
+          tags?: string[] | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      query_categories: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
         }
         Relationships: []
       }
@@ -283,6 +328,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      unsatisfied_queries: {
+        Row: {
+          ai_response: string | null
+          category: string | null
+          created_at: string | null
+          customer_id: string
+          escalation_id: string | null
+          feedback: string | null
+          id: string
+          is_escalated: boolean | null
+          message_id: string | null
+          query_text: string
+          satisfaction_rating: number | null
+          session_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          ai_response?: string | null
+          category?: string | null
+          created_at?: string | null
+          customer_id: string
+          escalation_id?: string | null
+          feedback?: string | null
+          id?: string
+          is_escalated?: boolean | null
+          message_id?: string | null
+          query_text: string
+          satisfaction_rating?: number | null
+          session_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          ai_response?: string | null
+          category?: string | null
+          created_at?: string | null
+          customer_id?: string
+          escalation_id?: string | null
+          feedback?: string | null
+          id?: string
+          is_escalated?: boolean | null
+          message_id?: string | null
+          query_text?: string
+          satisfaction_rating?: number | null
+          session_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {
