@@ -118,11 +118,20 @@ const Index = () => {
                     </Button>
                   </>
                 )}
+                {isAdmin && (
+                  <Button 
+                    onClick={() => navigate('/admin')}
+                    className="justify-start"
+                    variant="outline"
+                  >
+                    <Shield className="w-4 h-4 mr-2" />
+                    Admin Dashboard
+                  </Button>
+                )}
                 <div className="text-sm text-muted-foreground">
                   <p>More features coming soon:</p>
                   <ul className="space-y-1 mt-2">
                     <li>• Support ticket management</li>
-                    {isAdmin && <li>• Admin dashboard</li>}
                   </ul>
                 </div>
               </div>
