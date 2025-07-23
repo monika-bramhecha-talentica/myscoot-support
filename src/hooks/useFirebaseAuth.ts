@@ -25,16 +25,22 @@ export const useFirebaseAuth = () => {
 
   const sendOTP = async (phoneNumber: string): Promise<{ error: any }> => {
     try {
+      console.log('Attempting to send OTP to:', phoneNumber);
+      
       // Create reCAPTCHA verifier
       const recaptchaVerifier = setupRecaptcha('recaptcha-container');
+      console.log('reCAPTCHA verifier created:', recaptchaVerifier);
       
       // Send OTP
       const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
+      console.log('OTP sent successfully:', confirmationResult);
       setConfirmationResult(confirmationResult);
       
       return { error: null };
     } catch (error: any) {
-      console.error('Error sending OTP:', error);
+      console.error('Detailed OTP error:', error);
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
       return { error: error.message };
     }
   };
