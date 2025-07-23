@@ -16,6 +16,7 @@ import {
 import { AdminQuestions } from '@/components/admin/AdminQuestions';
 import { CustomerQueries } from '@/components/admin/CustomerQueries';
 import { QueryEscalations } from '@/components/admin/QueryEscalations';
+import { QueryManagement } from '@/components/admin/QueryManagement';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 
 export const AdminDashboard: React.FC = () => {
@@ -62,7 +63,7 @@ export const AdminDashboard: React.FC = () => {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-5 w-full max-w-2xl">
+          <TabsList className="grid grid-cols-6 w-full max-w-3xl">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               Overview
@@ -78,6 +79,10 @@ export const AdminDashboard: React.FC = () => {
             <TabsTrigger value="escalations" className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
               Escalations
+            </TabsTrigger>
+            <TabsTrigger value="management" className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Management
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <Activity className="h-4 w-4" />
@@ -99,6 +104,10 @@ export const AdminDashboard: React.FC = () => {
 
           <TabsContent value="escalations">
             <QueryEscalations />
+          </TabsContent>
+
+          <TabsContent value="management">
+            <QueryManagement />
           </TabsContent>
 
           <TabsContent value="analytics">
