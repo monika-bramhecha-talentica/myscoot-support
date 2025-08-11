@@ -110,7 +110,17 @@ const handleBack = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-<Tabs 
+        {step === 'otp' ? (
+          // Bypass Tabs entirely when verifying OTP to avoid hidden content issues
+          <OTPInput
+            phone={phoneNumber}
+            onVerify={handleOTPVerify}
+            onResend={handlePhoneSubmit}
+            onBack={handleBack}
+            loading={loading}
+          />
+        ) : (
+          <Tabs 
             value={activeTab}
             onValueChange={(value) => {
               const v = value as 'email' | 'phone';
@@ -118,128 +128,118 @@ const handleBack = () => {
               if (v === 'email') {
                 setStep('email');
               } else {
-                // Keep showing OTP screen under the Phone tab
-                setStep(step === 'otp' ? 'otp' : 'phone');
+                setStep('phone');
               }
             }}
             className="space-y-6"
           >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="email" className="flex items-center gap-2">
-              <Mail className="w-4 h-4" />
-              Email
-            </TabsTrigger>
-            <TabsTrigger value="phone" className="flex items-center gap-2">
-              <Phone className="w-4 h-4" />
-              Phone
-            </TabsTrigger>
-          </TabsList>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="email" className="flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                Email
+              </TabsTrigger>
+              <TabsTrigger value="phone" className="flex items-center gap-2">
+                <Phone className="w-4 h-4" />
+                Phone
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="email">
-            <Card className="w-full max-w-md mx-auto glass-effect">
-              <CardHeader className="text-center space-y-4">
-                <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center electric-glow">
-                  <Zap className="w-8 h-8 text-primary-foreground" />
-                </div>
-                <div>
-                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    MyScoot Support
-                  </CardTitle>
-                  <CardDescription className="text-base mt-2">
-                    {isSignUp ? 'Create your account' : 'Sign in to your account'}
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              
-              <CardContent>
-                <form onSubmit={handleEmailAuth} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium">
-                      Email Address
-                    </Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <TabsContent value="email">
+              <Card className="w-full max-w-md mx-auto glass-effect">
+                <CardHeader className="text-center space-y-4">
+                  <div className="mx-auto w-16 h-16 bg-primary rounded-full flex items-center justify-center electric-glow">
+                    <Zap className="w-8 h-8 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                      MyScoot Support
+                    </CardTitle>
+                    <CardDescription className="text-base mt-2">
+                      {isSignUp ? 'Create your account' : 'Sign in to your account'}
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                
+                <CardContent>
+                  <form onSubmit={handleEmailAuth} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-sm font-medium">
+                        Email Address
+                      </Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="your@email.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="pl-10 h-12 text-base"
+                          disabled={loading}
+                          required
+                          autoComplete="email"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="password" className="text-sm font-medium">
+                        Password
+                      </Label>
                       <Input
-                        id="email"
-                        type="email"
-                        placeholder="your@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="pl-10 h-12 text-base"
+                        id="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="h-12 text-base"
                         disabled={loading}
                         required
-                        autoComplete="email"
+                        minLength={6}
+                        autoComplete={isSignUp ? "new-password" : "current-password"}
                       />
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-sm font-medium">
-                      Password
-                    </Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 text-base"
-                      disabled={loading}
-                      required
-                      minLength={6}
-                      autoComplete={isSignUp ? "new-password" : "current-password"}
-                    />
-                  </div>
+                    <div className="space-y-4">
+                      <Button 
+                        type="submit" 
+                        className="w-full h-12 text-base electric-gradient hover:opacity-90 transition-opacity"
+                        disabled={loading || !email.trim() || !password.trim()}
+                      >
+                        {loading ? (
+                          <div className="flex items-center justify-center space-x-2">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <span>{isSignUp ? 'Creating Account...' : 'Signing In...'}</span>
+                          </div>
+                        ) : (
+                          isSignUp ? 'Create Account' : 'Sign In'
+                        )}
+                      </Button>
+                      
+                      <Button 
+                        type="button"
+                        variant="outline"
+                        className="w-full h-12 text-base"
+                        onClick={() => setIsSignUp(!isSignUp)}
+                        disabled={loading}
+                      >
+                        {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-                  <div className="space-y-4">
-                    <Button 
-                      type="submit" 
-                      className="w-full h-12 text-base electric-gradient hover:opacity-90 transition-opacity"
-                      disabled={loading || !email.trim() || !password.trim()}
-                    >
-                      {loading ? (
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span>{isSignUp ? 'Creating Account...' : 'Signing In...'}</span>
-                        </div>
-                      ) : (
-                        isSignUp ? 'Create Account' : 'Sign In'
-                      )}
-                    </Button>
-                    
-                    <Button 
-                      type="button"
-                      variant="outline"
-                      className="w-full h-12 text-base"
-                      onClick={() => setIsSignUp(!isSignUp)}
-                      disabled={loading}
-                    >
-                      {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="phone">
-            {step === 'phone' ? (
+            <TabsContent value="phone">
               <PhoneInput
                 onSubmit={handlePhoneSubmit}
                 loading={loading}
                 onNext={handleOTPNext}
               />
-            ) : (
-              <OTPInput
-                phone={phoneNumber}
-                onVerify={handleOTPVerify}
-                onResend={handlePhoneSubmit}
-                onBack={handleBack}
-                loading={loading}
-              />
-            )}
-          </TabsContent>
-        </Tabs>
+            </TabsContent>
+          </Tabs>
+        )}
       </div>
     </div>
   );
