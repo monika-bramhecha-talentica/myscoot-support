@@ -15,6 +15,7 @@ type AuthStep = 'phone' | 'otp' | 'email';
 
 export const AuthPage: React.FC = () => {
   const [step, setStep] = useState<AuthStep>('email');
+  const [activeTab, setActiveTab] = useState<'email' | 'phone'>('email');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,6 +31,11 @@ export const AuthPage: React.FC = () => {
       navigate('/', { replace: true });
     }
   }, [user, navigate]);
+
+  // Debug state tracker
+  useEffect(() => {
+    console.log('[AuthPage] step:', step, 'activeTab:', activeTab, 'phoneNumber:', phoneNumber);
+  }, [step, activeTab, phoneNumber]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +75,7 @@ export const AuthPage: React.FC = () => {
     }
   };
 
-  const handlePhoneSubmit = async (phone: string) => {
+const handlePhoneSubmit = async (phone: string) => {
     setLoading(true);
     const result = await signInWithOTP(phone);
     setLoading(false);
@@ -78,6 +84,7 @@ export const AuthPage: React.FC = () => {
       // Persist phone and move to OTP step
       setPhoneNumber(phone);
       setStep('otp');
+      setActiveTab('phone');
     }
     
     return result;
@@ -94,7 +101,8 @@ export const AuthPage: React.FC = () => {
     setStep('otp');
   };
 
-  const handleBack = () => {
+const handleBack = () => {
+    setActiveTab('phone');
     setStep('phone');
     setPhoneNumber('');
   };
@@ -102,10 +110,12 @@ export const AuthPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-          <Tabs 
-            value={step === 'otp' ? 'phone' : step}
+<Tabs 
+            value={activeTab}
             onValueChange={(value) => {
-              if (value === 'email') {
+              const v = value as 'email' | 'phone';
+              setActiveTab(v);
+              if (v === 'email') {
                 setStep('email');
               } else {
                 // Keep showing OTP screen under the Phone tab
