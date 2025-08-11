@@ -176,7 +176,7 @@ export const OTPInput: React.FC<OTPInputProps> = ({
                   type="text"
                   inputMode="numeric"
                   pattern="\d*"
-                  maxLength={6}
+                  maxLength={1}
                   value={digit}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}

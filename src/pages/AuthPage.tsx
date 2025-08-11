@@ -100,7 +100,18 @@ export const AuthPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <Tabs value={step} onValueChange={(value) => setStep(value as AuthStep)} className="space-y-6">
+          <Tabs 
+            value={step === 'otp' ? 'phone' : step}
+            onValueChange={(value) => {
+              if (value === 'email') {
+                setStep('email');
+              } else {
+                // Keep showing OTP screen under the Phone tab
+                setStep(step === 'otp' ? 'otp' : 'phone');
+              }
+            }}
+            className="space-y-6"
+          >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="email" className="flex items-center gap-2">
               <Mail className="w-4 h-4" />
