@@ -112,26 +112,33 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId, onBack 
 
       if (userMessageError) throw userMessageError;
 
-      // Simulate AI response (replace with actual AI integration)
-      setTimeout(async () => {
-        const responses = [
-          "Thank you for your question. I'm here to help you with any concerns you may have.",
-          "I understand your inquiry. Let me provide you with the information you need.",
-          "That's a great question! Here's what I can tell you about that topic.",
-          "I'm processing your request. Please give me a moment to provide you with the best answer.",
-          "Based on your question, here are some helpful suggestions for you."
-        ];
+      // Invoke AI edge function for real response
+      try {
+        const { data, error } = await supabase.functions.invoke('support-chat', {
+          body: {
+            prompt: messageContent,
+            sessionId,
+          },
+        });
 
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        if (error) throw error;
 
+        const aiText = (data as any)?.generatedText || 'Sorry, I could not generate a response.';
         await supabase
           .from('chat_messages')
           .insert({
             session_id: sessionId,
-            content: randomResponse,
+            content: aiText,
             message_type: 'bot'
           });
-      }, 1000 + Math.random() * 2000);
+      } catch (e) {
+        console.error('AI response error:', e);
+        toast({
+          title: "AI Error",
+          description: "Failed to generate AI response.",
+          variant: "destructive",
+        });
+      }
 
     } catch (error) {
       console.error('Error sending message:', error);

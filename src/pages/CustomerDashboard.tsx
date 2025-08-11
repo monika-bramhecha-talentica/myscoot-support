@@ -124,25 +124,23 @@ export const CustomerDashboard: React.FC = () => {
             message_type: 'user'
           });
 
-        // Simulate an AI response so the conversation starts immediately
-        const responses = [
-          "Thank you for your question. I'm here to help you with any concerns you may have.",
-          "I understand your inquiry. Let me provide you with the information you need.",
-          "That's a great question! Here's what I can tell you about that topic.",
-          "I'm processing your request. Please give me a moment to provide you with the best answer.",
-          "Based on your question, here are some helpful suggestions for you."
-        ];
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        // small delay to feel natural
-        setTimeout(async () => {
+        // Generate an AI response for the initial message
+        try {
+          const { data, error } = await supabase.functions.invoke('support-chat', {
+            body: { prompt: initialMessage, sessionId: sessionData.id },
+          });
+          if (error) throw error;
+          const aiText = (data as any)?.generatedText || 'Thanks for reaching out. A support agent will follow up shortly.';
           await supabase
             .from('chat_messages')
             .insert({
               session_id: sessionData.id,
-              content: randomResponse,
+              content: aiText,
               message_type: 'bot'
             });
-        }, 800 + Math.random() * 1200);
+        } catch (e) {
+          console.error('AI response error:', e);
+        }
       }
 
       toast({
