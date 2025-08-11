@@ -114,8 +114,8 @@ export const CustomerDashboard: React.FC = () => {
       setActiveSessionId(sessionData.id);
       await loadChatSessions();
 
-      // If there's an initial message, send it
       if (initialMessage) {
+        // Insert the user's initial message
         await supabase
           .from('chat_messages')
           .insert({
@@ -123,6 +123,26 @@ export const CustomerDashboard: React.FC = () => {
             content: initialMessage,
             message_type: 'user'
           });
+
+        // Simulate an AI response so the conversation starts immediately
+        const responses = [
+          "Thank you for your question. I'm here to help you with any concerns you may have.",
+          "I understand your inquiry. Let me provide you with the information you need.",
+          "That's a great question! Here's what I can tell you about that topic.",
+          "I'm processing your request. Please give me a moment to provide you with the best answer.",
+          "Based on your question, here are some helpful suggestions for you."
+        ];
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        // small delay to feel natural
+        setTimeout(async () => {
+          await supabase
+            .from('chat_messages')
+            .insert({
+              session_id: sessionData.id,
+              content: randomResponse,
+              message_type: 'bot'
+            });
+        }, 800 + Math.random() * 1200);
       }
 
       toast({
