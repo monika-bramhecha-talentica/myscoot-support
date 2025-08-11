@@ -25,12 +25,9 @@ export const AuthPage: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (user) {
-      navigate('/', { replace: true });
-    }
-  }, [user, navigate]);
+  // Removed auto-redirect to allow OTP flow on /auth even if already authenticated
+  // Navigation now happens only after successful auth actions.
+
 
   // Debug state tracker
   useEffect(() => {
@@ -94,6 +91,9 @@ const handlePhoneSubmit = async (phone: string) => {
     setLoading(true);
     const result = await verifyOTP(phone, otp);
     setLoading(false);
+    if (!result.error) {
+      navigate('/', { replace: true });
+    }
     return result;
   };
 
