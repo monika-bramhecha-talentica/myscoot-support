@@ -73,15 +73,22 @@ export const AuthPage: React.FC = () => {
   };
 
 const handlePhoneSubmit = async (phone: string) => {
+    // Immediately move to OTP step to avoid UI getting stuck
+    setPhoneNumber(phone);
+    setActiveTab('phone');
+    setStep('otp');
+
     setLoading(true);
     const result = await signInWithOTP(phone);
     setLoading(false);
     
-    if (!result.error) {
-      // Persist phone and move to OTP step
-      setPhoneNumber(phone);
-      setStep('otp');
-      setActiveTab('phone');
+    if (result.error) {
+      // Stay on OTP screen but inform user; they may still receive SMS
+      toast({
+        title: 'OTP Send Failed',
+        description: result.error.message || 'If you receive a code, you can still enter it below.',
+        variant: 'destructive'
+      });
     }
     
     return result;
