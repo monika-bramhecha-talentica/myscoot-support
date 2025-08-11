@@ -75,7 +75,9 @@ export const AuthPage: React.FC = () => {
     setLoading(false);
     
     if (!result.error) {
+      // Persist phone and move to OTP step
       setPhoneNumber(phone);
+      setStep('otp');
     }
     
     return result;

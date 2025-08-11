@@ -111,9 +111,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signInWithOTP = async (phone: string) => {
-    console.log('Sending OTP to:', phone);
+    // Normalize to E.164 with leading +
+    const normalized = `+${phone.replace(/[^\d]/g, '')}`.replace(/^\+\+/, '+');
+    console.log('Sending OTP to:', normalized);
     const { error } = await supabase.auth.signInWithOtp({
-      phone: phone,
+      phone: normalized,
       options: {
         shouldCreateUser: true
       }
